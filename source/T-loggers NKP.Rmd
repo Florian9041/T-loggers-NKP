@@ -7,13 +7,29 @@ output: html_document
 ```{r}
 library(readxl)
 library(ggplot2)
+library(scales)
 ```
 
 # lees data in
 ```{r}
 data_log1 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 1 2024-01-22 13_57_49 CET (Data CET).xlsx")
+data_log2 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 2 2024-01-22 14_00_31 CET (Data CET).xlsx")
+data_log3 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 3 2024-01-22 14_02_32 CET (Data CET).xlsx")
+data_log4 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 4 2024-01-22 14_04_25 CET (Data CET).xlsx")
+data_log5 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 5 2024-01-22 14_06_23 CET (Data CET).xlsx")
+data_log6 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 6 2024-01-22 14_07_49 CET (Data CET).xlsx")
+data_log7 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 7 2024-01-22 14_12_04 CET (Data CET).xlsx")
+data_log8 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 8 2024-01-22 14_14_09 CET (Data CET).xlsx")
+
 summary(data_log1)
-colnames(data_log1) <- c("#", "Datum_Tijdstip", "Temp_log1_°C", "Licht_log1_lux")
+colnames(data_log1) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
+colnames(data_log2) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
+colnames(data_log3) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
+colnames(data_log4) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
+colnames(data_log5) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
+colnames(data_log6) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
+colnames(data_log7) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
+colnames(data_log8) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
 ```
 
 # plot
@@ -25,10 +41,36 @@ ggplot(data_log1,
 # 1 meting van 
 
 ggplot(data_log1,
-       aes(x = Datum_Tijdstip, y = `Temp_log1_°C`)) +
-  geom_line() +
-  labs(title = "Temperatuurverloop Logger 1 Nieuwkapelleplas") +
+       aes(x = Datum_Tijdstip, y = `log1_°C`)) +
+  geom_line(colour = "red") +
+  labs(title = "Temperatuurverloop Loggers 1 Nieuwkapelleplas") +
   ylab("Temperatuur (°C)") +
-  xlab("Tijdstip staalname")
+  xlab("Datum staalname")
+```
+
+# Randzone logger 1 - 8 
+```{r}
+ggplot(data_log1,
+       aes(x = Datum_Tijdstip, y = `log1_°C`)) +
+  geom_line(colour = "red") +
+  geom_line(data = data_log2, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "orange") +
+  geom_line(data = data_log3, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "yellow") +
+  geom_line(data = data_log4, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "lightgreen") +
+  geom_line(data = data_log5, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "green") +
+  geom_line(data = data_log6, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "darkgreen") +
+  geom_line(data = data_log7, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "lightblue") +
+  geom_line(data = data_log8, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "blue") +
+  labs(title = "Temperatuurverloop Loggers randzone (1-8) Nieuwkapelleplas") +
+  ylab("Temperatuur (°C)") +
+  xlab("Datum staalname") +
+  scale_y_continuous(breaks = seq(0,17,1)) +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+ 
+```
+
+
+# Zonnepanelen logger 12 - 20
+```{r}
+
 ```
 
