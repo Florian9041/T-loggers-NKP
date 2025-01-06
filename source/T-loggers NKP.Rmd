@@ -4,13 +4,31 @@ author: "Florian Van Hecke"
 date: "2025-01-06"
 output: html_document
 ---
-
 ```{r}
-
+library(readxl)
+library(ggplot2)
 ```
 
-
+# lees data in
 ```{r}
+data_log1 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 1 2024-01-22 13_57_49 CET (Data CET).xlsx")
+summary(data_log1)
+colnames(data_log1) <- c("#", "Datum_Tijdstip", "Temp_log1_°C", "Licht_log1_lux")
+```
 
+# plot
+```{r}
+# check outliers
+ggplot(data_log1,
+       aes(x = Datum_Tijdstip, y = `Temp_log1_°C`)) +
+  geom_boxplot()
+# 1 meting van 
+
+ggplot(data_log1,
+       aes(x = Datum_Tijdstip, y = `Temp_log1_°C`)) +
+  geom_line() +
+  labs(title = "Temperatuurverloop Logger 1 Nieuwkapelleplas") +
+  ylab("Temperatuur (°C)") +
+  xlab("Tijdstip staalname")
 ```
 
