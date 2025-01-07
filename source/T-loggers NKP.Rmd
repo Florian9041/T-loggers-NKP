@@ -8,10 +8,14 @@ output: html_document
 library(readxl)
 library(ggplot2)
 library(scales)
+library(tidyr)
+library(dplyr)
+library(plotly)
 ```
 
 # lees data in
 ```{r}
+# RANDZONE
 data_log1 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 1 2024-01-22 13_57_49 CET (Data CET).xlsx")
 data_log2 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 2 2024-01-22 14_00_31 CET (Data CET).xlsx")
 data_log3 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 3 2024-01-22 14_02_32 CET (Data CET).xlsx")
@@ -22,55 +26,204 @@ data_log7 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 7 2024-01-22 14_12_
 data_log8 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 8 2024-01-22 14_14_09 CET (Data CET).xlsx")
 
 summary(data_log1)
-colnames(data_log1) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
-colnames(data_log2) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
-colnames(data_log3) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
-colnames(data_log4) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
-colnames(data_log5) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
-colnames(data_log6) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
-colnames(data_log7) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
-colnames(data_log8) <- c("#", "Datum_Tijdstip", "log1_°C", "log1_lux")
+colnames(data_log1) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log1$label <- "logger1"
+colnames(data_log2) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log2$label <- "logger2"
+colnames(data_log3) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log3$label <- "logger3"
+colnames(data_log4) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log4$label <- "logger4"
+colnames(data_log5) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log5$label <- "logger5"
+colnames(data_log6) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log6$label <- "logger6"
+colnames(data_log7) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log7$label <- "logger7"
+colnames(data_log8) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log8$label <- "logger8"
+
+# ZONNEPANELEN
+data_log12 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 12 2024-01-22 15_55_07 CET (Data CET).xlsx")
+data_log13 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 13 2024-01-22 15_56_24 CET (Data CET).xlsx")
+data_log14 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 14 2024-01-22 15_57_27 CET (Data CET).xlsx")
+data_log15 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 15 2024-01-22 15_59_20 CET (Data CET).xlsx")
+data_log16 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 16 2024-01-22 16_01_12 CET (Data CET).xlsx")
+data_log17 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 17 2024-01-22 16_02_04 CET (Data CET).xlsx")
+data_log18 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 18 2024-01-22 16_03_20 CET (Data CET).xlsx")
+data_log19 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 19 2024-01-22 16_05_14 CET (Data CET).xlsx")
+data_log20 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 20 2024-01-22 16_06_04 CET (Data CET).xlsx")
+
+colnames(data_log12) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log12$label <- "logger12"
+colnames(data_log13) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log13$label <- "logger13"
+colnames(data_log14) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log14$label <- "logger14"
+colnames(data_log15) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log15$label <- "logger15"
+colnames(data_log16) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log16$label <- "logger16"
+colnames(data_log17) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log17$label <- "logger17"
+colnames(data_log18) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log18$label <- "logger18"
+colnames(data_log19) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log19$label <- "logger19"
+colnames(data_log20) <- c("#", "Datum_Tijdstip", "°C", "lux")
+data_log20$label <- "logger20"
+
+reeks_randzone <- c("logger1", "logger2", "logger3", "logger4", "logger5", "logger6", "logger7", "logger8")
+reeks_zonnepanelen <- c("logger12", "logger13", "logger14", "logger15", "logger16", "logger17", "logger18", "logger19", "logger20")
 ```
+
+# data samenvoegen en naar wide format
+```{r}
+combotabel_RZ <- rbind(data_log1, data_log2, data_log3, data_log4, data_log5, data_log6, data_log7, data_log8)
+colnames(combotabel_RZ) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
+combo_long_RZ <- combotabel_RZ %>% pivot_longer(cols = c("Temperatuur", "Helderheid"),names_to = "Variabele", values_to = "Meetwaarde")
+
+# add label
+combo_long_RZ <- combo_long_RZ %>%
+  mutate(
+    Eenheid = case_when(
+      grepl("Temperatuur", Variabele) ~ "°C",  # If "Variabele" contains "Temperatuur"
+      grepl("Helderheid", Variabele) ~ "lux",  # If "Variabele" contains "Helderheid"
+    TRUE ~ NA_character_  # Default case if neither condition matches
+  ),Label = case_when(
+      grepl("Temperatuur", Variabele) ~ "Temperatuur (°C)",  # If "Variabele" contains "Temperatuur"
+      grepl("Helderheid", Variabele) ~ "Helderheid (lux)",  # If "Variabele" contains "Helderheid"
+    TRUE ~ NA_character_  # Default case if neither condition matches
+  ))
+```
+
 
 # plot
 ```{r}
 # check outliers
 ggplot(data_log1,
-       aes(x = Datum_Tijdstip, y = `Temp_log1_°C`)) +
+       aes(x = Datum_Tijdstip, y = `°C`)) +
   geom_boxplot()
 # 1 meting van 
 
 ggplot(data_log1,
-       aes(x = Datum_Tijdstip, y = `log1_°C`)) +
+       aes(x = Datum_Tijdstip, y = `°C`)) +
   geom_line(colour = "red") +
-  labs(title = "Temperatuurverloop Loggers 1 Nieuwkapelleplas") +
-  ylab("Temperatuur (°C)") +
-  xlab("Datum staalname")
+  geom_line(data = data_log1, aes(x = Datum_Tijdstip, y = lux)) +
+  labs(title = "Temperatuurverloop + helderheid Logger 1 Nieuwkapelleplas") +
+  ylab("Meetwaarde (log10)") +
+  xlab("Datum staalname") +
+  scale_y_log10() + 
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+
 ```
 
 # Randzone logger 1 - 8 
 ```{r}
+# temperatuur (°C)
 ggplot(data_log1,
-       aes(x = Datum_Tijdstip, y = `log1_°C`)) +
+       aes(x = Datum_Tijdstip, y = `°C`)) +
   geom_line(colour = "red") +
-  geom_line(data = data_log2, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "orange") +
-  geom_line(data = data_log3, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "yellow") +
-  geom_line(data = data_log4, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "lightgreen") +
-  geom_line(data = data_log5, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "green") +
-  geom_line(data = data_log6, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "darkgreen") +
-  geom_line(data = data_log7, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "lightblue") +
-  geom_line(data = data_log8, aes(x = Datum_Tijdstip, y = `log1_°C`), colour = "blue") +
+  geom_line(data = data_log2, aes(x = Datum_Tijdstip, y = `°C`), colour = "orange") +
+  geom_line(data = data_log3, aes(x = Datum_Tijdstip, y = `°C`), colour = "yellow") +
+  geom_line(data = data_log4, aes(x = Datum_Tijdstip, y = `°C`), colour = "lightgreen") +
+  geom_line(data = data_log5, aes(x = Datum_Tijdstip, y = `°C`), colour = "green") +
+  geom_line(data = data_log6, aes(x = Datum_Tijdstip, y = `°C`), colour = "darkgreen") +
+  geom_line(data = data_log7, aes(x = Datum_Tijdstip, y = `°C`), colour = "lightblue") +
+  geom_line(data = data_log8, aes(x = Datum_Tijdstip, y = `°C`), colour = "blue") +
   labs(title = "Temperatuurverloop Loggers randzone (1-8) Nieuwkapelleplas") +
   ylab("Temperatuur (°C)") +
   xlab("Datum staalname") +
   scale_y_continuous(breaks = seq(0,17,1)) +
   scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
- 
+
+# helderheid (lux)
+## geen transformatie lux
+ggplot(data_log1,
+       aes(x = Datum_Tijdstip, y = lux)) +
+  geom_line(colour = "red") +
+  geom_line(data = data_log2, aes(x = Datum_Tijdstip, y = lux), colour = "orange") +
+  geom_line(data = data_log3, aes(x = Datum_Tijdstip, y = lux), colour = "yellow") +
+  geom_line(data = data_log4, aes(x = Datum_Tijdstip, y = lux), colour = "lightgreen") +
+  geom_line(data = data_log5, aes(x = Datum_Tijdstip, y = lux), colour = "green") +
+  geom_line(data = data_log6, aes(x = Datum_Tijdstip, y = lux), colour = "darkgreen") +
+  geom_line(data = data_log7, aes(x = Datum_Tijdstip, y = lux), colour = "lightblue") +
+  geom_line(data = data_log8, aes(x = Datum_Tijdstip, y = lux), colour = "blue") +
+  labs(title = "Helderheid Loggers randzone (1-8) Nieuwkapelleplas") +
+  ylab("Helderheid (lux)") +
+  xlab("Datum staalname") +
+  ylim(0,8000) +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+
+## logaritmische transformatie lux
+ggplot(data_log1,
+       aes(x = Datum_Tijdstip, y = lux)) +
+  geom_line(colour = "red") +
+  geom_line(data = data_log2, aes(x = Datum_Tijdstip, y = lux), colour = "orange") +
+  geom_line(data = data_log3, aes(x = Datum_Tijdstip, y = lux), colour = "yellow") +
+  geom_line(data = data_log4, aes(x = Datum_Tijdstip, y = lux), colour = "lightgreen") +
+  geom_line(data = data_log5, aes(x = Datum_Tijdstip, y = lux), colour = "green") +
+  geom_line(data = data_log6, aes(x = Datum_Tijdstip, y = lux), colour = "darkgreen") +
+  geom_line(data = data_log7, aes(x = Datum_Tijdstip, y = lux), colour = "lightblue") +
+  geom_line(data = data_log8, aes(x = Datum_Tijdstip, y = lux), colour = "blue") +
+  labs(title = "Helderheid Loggers randzone (1-8) Nieuwkapelleplas") +
+  ylab("Helderheid (lux)") +
+  xlab("Datum staalname") +
+  ylim(0,8000) +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y")) +
+  scale_y_log10()
 ```
 
 
 # Zonnepanelen logger 12 - 20
 ```{r}
+# temperatuur (°C)
+ggplot(data_log12,
+       aes(x = Datum_Tijdstip, y = `°C`)) +
+  geom_line(colour = "red") +
+  geom_line(data = data_log13, aes(x = Datum_Tijdstip, y = `°C`), colour = "orange") +
+  geom_line(data = data_log14, aes(x = Datum_Tijdstip, y = `°C`), colour = "yellow") +
+  geom_line(data = data_log15, aes(x = Datum_Tijdstip, y = `°C`), colour = "lightgreen") +
+  geom_line(data = data_log16, aes(x = Datum_Tijdstip, y = `°C`), colour = "green") +
+  geom_line(data = data_log17, aes(x = Datum_Tijdstip, y = `°C`), colour = "darkgreen") +
+  geom_line(data = data_log18, aes(x = Datum_Tijdstip, y = `°C`), colour = "lightblue") +
+  geom_line(data = data_log19, aes(x = Datum_Tijdstip, y = `°C`), colour = "blue") +
+  geom_line(data = data_log20, aes(x = Datum_Tijdstip, y = `°C`), colour = "darkblue") +
+  labs(title = "Temperatuurverloop Loggers zonnepaneelzone (12-20) Nieuwkapelleplas") +
+  ylab("Temperatuur (°C)") +
+  xlab("Datum staalname") +
+  scale_y_continuous(breaks = seq(0,17,1)) +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+
+# licht-intensiteit (lux)
+ggplot(data_log12,
+       aes(x = Datum_Tijdstip, y = lux)) +
+  geom_line(colour = "red") +
+  geom_line(data = data_log13, aes(x = Datum_Tijdstip, y = lux), colour = "orange") +
+  geom_line(data = data_log14, aes(x = Datum_Tijdstip, y = lux), colour = "yellow") +
+  geom_line(data = data_log15, aes(x = Datum_Tijdstip, y = lux), colour = "lightgreen") +
+  geom_line(data = data_log16, aes(x = Datum_Tijdstip, y = lux), colour = "green") +
+  geom_line(data = data_log17, aes(x = Datum_Tijdstip, y = lux), colour = "darkgreen") +
+  geom_line(data = data_log18, aes(x = Datum_Tijdstip, y = lux), colour = "lightblue") +
+  geom_line(data = data_log19, aes(x = Datum_Tijdstip, y = lux), colour = "blue") +
+  geom_line(data = data_log20, aes(x = Datum_Tijdstip, y = lux), colour = "darkblue") +
+  labs(title = "Lichtintensiteit Loggers zonnepaneelzone (12-20) Nieuwkapelleplas") +
+  ylab("Temperatuur (°C)") +
+  xlab("Datum staalname") +
+  scale_y_log10() +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+```
+
+# met gecombineerde tabel
+```{r}
+combo_long_RZ %>% filter(Logger %in% reeks_randzone & Variabele == "Temperatuur") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line()
+
+combo_long_RZ %>% filter(Logger %in% reeks_randzone & Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_y_log10()
 
 ```
 
