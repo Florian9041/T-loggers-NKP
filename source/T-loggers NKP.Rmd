@@ -10,6 +10,7 @@ library(ggplot2)
 library(scales)
 library(tidyr)
 library(dplyr)
+library(ggpubr)
 ```
 
 # lees data in
@@ -27,21 +28,21 @@ data_log8 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 8 2024-01-22 14_14_
 
 summary(data_log1)
 colnames(data_log1) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log1$label <- "logger1"
+data_log1$label <- "01"
 colnames(data_log2) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log2$label <- "logger2"
+data_log2$label <- "02"
 colnames(data_log3) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log3$label <- "logger3"
+data_log3$label <- "03"
 colnames(data_log4) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log4$label <- "logger4"
+data_log4$label <- "04"
 colnames(data_log5) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log5$label <- "logger5"
+data_log5$label <- "05"
 colnames(data_log6) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log6$label <- "logger6"
+data_log6$label <- "06"
 colnames(data_log7) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log7$label <- "logger7"
+data_log7$label <- "07"
 colnames(data_log8) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log8$label <- "logger8"
+data_log8$label <- "08"
 
 ## Export 2 (31/10/2023 - 22/04/2024)
 data2_log1 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 1 2024-04-22 12_01_57 CEST (Data CEST).xlsx")
@@ -54,21 +55,21 @@ data2_log7 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 7 2024-04-22 12_07
 data2_log8 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 8 2024-04-22 12_08_19 CEST (Data CEST).xlsx")
 
 colnames(data2_log1) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log1$label <- "logger1"
+data2_log1$label <- "01"
 colnames(data2_log2) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log2$label <- "logger2"
+data2_log2$label <- "02"
 colnames(data2_log3) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log3$label <- "logger3"
+data2_log3$label <- "03"
 colnames(data2_log4) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log4$label <- "logger4"
+data2_log4$label <- "04"
 colnames(data2_log5) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log5$label <- "logger5"
+data2_log5$label <- "05"
 colnames(data2_log6) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log6$label <- "logger6"
+data2_log6$label <- "06"
 colnames(data2_log7) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log7$label <- "logger7"
+data2_log7$label <- "07"
 colnames(data2_log8) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log8$label <- "logger8"
+data2_log8$label <- "08"
 
 # ZONNEPANELEN
 
@@ -84,23 +85,23 @@ data_log19 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 19 2024-01-22 16_0
 data_log20 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 20 2024-01-22 16_06_04 CET (Data CET).xlsx")
 
 colnames(data_log12) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log12$label <- "logger12"
+data_log12$label <- "12"
 colnames(data_log13) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log13$label <- "logger13"
+data_log13$label <- "13"
 colnames(data_log14) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log14$label <- "logger14"
+data_log14$label <- "14"
 colnames(data_log15) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log15$label <- "logger15"
+data_log15$label <- "15"
 colnames(data_log16) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log16$label <- "logger16"
+data_log16$label <- "16"
 colnames(data_log17) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log17$label <- "logger17"
+data_log17$label <- "17"
 colnames(data_log18) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log18$label <- "logger18"
+data_log18$label <- "18"
 colnames(data_log19) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log19$label <- "logger19"
+data_log19$label <- "19"
 colnames(data_log20) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data_log20$label <- "logger20"
+data_log20$label <- "20"
 
 ## Export 2 (31/10/2023 - 22/04/2024)
 data2_log12 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 12 2024-04-22 12_12_11 CEST (Data CEST).xlsx")
@@ -114,23 +115,23 @@ data2_log19 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 19 2024-04-22 12_
 data2_log20 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 20 2024-04-22 12_20_18 CEST (Data CEST).xlsx")
 
 colnames(data2_log12) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log12$label <- "logger12"
+data2_log12$label <- "12"
 colnames(data2_log13) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log13$label <- "logger13"
+data2_log13$label <- "13"
 colnames(data2_log14) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log14$label <- "logger14"
+data2_log14$label <- "14"
 colnames(data2_log15) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log15$label <- "logger15"
+data2_log15$label <- "15"
 colnames(data2_log16) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log16$label <- "logger16"
+data2_log16$label <- "16"
 colnames(data2_log17) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log17$label <- "logger17"
+data2_log17$label <- "17"
 colnames(data2_log18) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log18$label <- "logger18"
+data2_log18$label <- "18"
 colnames(data2_log19) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log19$label <- "logger19"
+data2_log19$label <- "19"
 colnames(data2_log20) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data2_log20$label <- "logger20"
+data2_log20$label <- "20"
 
 ## Export 3 (31/10/2023 - 22/08/2024)
 data3_log12 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 11 2024-11-20 09_54_11 CET (Data CET).xlsx")
@@ -144,26 +145,26 @@ data3_log19 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 19 2024-11-20 10_
 data3_log20 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 20 2024-11-20 10_11_11 CET (Data CET).xlsx")
 
 colnames(data3_log12) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data3_log12$label <- "logger12"
+data3_log12$label <- "12"
 colnames(data3_log13) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data3_log13$label <- "logger13"
+data3_log13$label <- "13"
 colnames(data3_log14) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data3_log14$label <- "logger14"
+data3_log14$label <- "14"
 colnames(data3_log15) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data3_log15$label <- "logger15"
+data3_log15$label <- "15"
 colnames(data3_log16) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data3_log16$label <- "logger16"
+data3_log16$label <- "16"
 colnames(data3_log17) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data3_log17$label <- "logger17"
+data3_log17$label <- "17"
 colnames(data3_log18) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data3_log18$label <- "logger18"
+data3_log18$label <- "18"
 colnames(data3_log19) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data3_log19$label <- "logger19"
+data3_log19$label <- "19"
 colnames(data3_log20) <- c("#", "Datum_Tijdstip", "°C", "lux")
-data3_log20$label <- "logger20"
+data3_log20$label <- "20"
 
-reeks_randzone <- c("logger1", "logger2", "logger3", "logger4", "logger5", "logger6", "logger7", "logger8")
-reeks_zonnepanelen <- c("logger12", "logger13", "logger14", "logger15", "logger16", "logger17", "logger18", "logger19", "logger20")
+reeks_randzone <- c("01", "02", "03", "04", "05", "06", "07", "08")
+reeks_zonnepanelen <- c("12", "13", "14", "15", "16", "17", "18", "19", "20")
 ```
 
 # data samenvoegen en naar wide format
@@ -316,7 +317,7 @@ ggplot(data_log1,
   geom_line(data = data_log6, aes(x = Datum_Tijdstip, y = lux), colour = "darkgreen") +
   geom_line(data = data_log7, aes(x = Datum_Tijdstip, y = lux), colour = "lightblue") +
   geom_line(data = data_log8, aes(x = Datum_Tijdstip, y = lux), colour = "blue") +
-  labs(title = "Helderheid Loggers randzone (1-8) Nieuwkapelleplas") +
+  labs(title = "Lichtintensiteit Loggers randzone (1-8) Nieuwkapelleplas") +
   ylab("Helderheid (lux)") +
   xlab("Datum staalname") +
   ylim(0,8000) +
@@ -333,7 +334,7 @@ ggplot(data_log1,
   geom_line(data = data_log6, aes(x = Datum_Tijdstip, y = lux), colour = "darkgreen") +
   geom_line(data = data_log7, aes(x = Datum_Tijdstip, y = lux), colour = "lightblue") +
   geom_line(data = data_log8, aes(x = Datum_Tijdstip, y = lux), colour = "blue") +
-  labs(title = "Helderheid Loggers randzone (1-8) Nieuwkapelleplas") +
+  labs(title = "Lichtintensiteit Loggers randzone (1-8) Nieuwkapelleplas") +
   ylab("Helderheid (lux)") +
   xlab("Datum staalname") +
   ylim(0,8000) +
@@ -383,15 +384,80 @@ ggplot(data_log12,
 
 # met gecombineerde tabel
 ```{r}
-combo_long_RZ %>% filter(Logger %in% reeks_randzone & Variabele == "Temperatuur") %>%
-  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
-  geom_line()
-
-combo_long_RZ %>% filter(Logger %in% reeks_randzone & Variabele == "Helderheid") %>%
+# data-reeks 1
+## Randzone
+combo_long_RZ %>% filter(Variabele == "Temperatuur") %>%
   ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
   geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+
+combo_long_RZ %>% filter(Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_y_log10() +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+
+## Zonnepanelen
+combo_long_ZP %>% filter(Variabele == "Temperatuur") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+
+combo_long_ZP %>% filter(Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_y_log10() +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+
+## vergelijking RZ en ZP
+### temperatuur
+temp_ZP <- combo_long_ZP %>% filter(Variabele == "Temperatuur") %>%
+  ggplot(aes(x = Logger, y = Meetwaarde, colour = Logger)) +
+  geom_boxplot() +
+  ylab("") +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+
+temp_RZ <- combo_long_RZ %>% filter(Variabele == "Temperatuur") %>%
+  ggplot(aes(x = Logger, y = Meetwaarde, colour = Logger)) +
+  geom_boxplot() +
+  ylab("Temperatuur (°C)") +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+
+ggarrange(temp_RZ, temp_ZP, ncol = 2, legend = FALSE)
+
+### licht-intensiteit
+ggplot() +
+  geom_boxplot(data = combo_long_ZP %>% 
+                 filter(Variabele == "Helderheid"), aes(x = Logger, y = Meetwaarde, colour = Logger)) + 
+  geom_boxplot(data = combo_long_RZ %>% 
+                 filter(Variabele == "Helderheid"), aes(x = Logger, y = Meetwaarde, colour = Logger)) +
+  ylab("Licht-intensiteit (lux)") +
   scale_y_log10()
 
+# data-reeks 2
+## Randzone
+combo2_long_RZ %>% filter(Variabele == "Temperatuur") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b-%Y"))
+
+combo2_long_RZ %>% filter(Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_y_log10() +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b-%Y"))
+
+## Zonnepanelen
+combo2_long_ZP %>% filter(Variabele == "Temperatuur") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b-%Y"))
+
+combo2_long_ZP %>% filter(Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_y_log10() +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b-%Y"))
 
 ```
 
