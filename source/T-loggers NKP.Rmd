@@ -167,13 +167,91 @@ reeks_zonnepanelen <- c("logger12", "logger13", "logger14", "logger15", "logger1
 ```
 
 # data samenvoegen en naar wide format
+## Randzone (logger 1 - 8)
 ```{r}
+# Export 1
 combotabel_RZ <- rbind(data_log1, data_log2, data_log3, data_log4, data_log5, data_log6, data_log7, data_log8)
 colnames(combotabel_RZ) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
 combo_long_RZ <- combotabel_RZ %>% pivot_longer(cols = c("Temperatuur", "Helderheid"),names_to = "Variabele", values_to = "Meetwaarde")
 
-# add label
+## add label
 combo_long_RZ <- combo_long_RZ %>%
+  mutate(
+    Eenheid = case_when(
+      grepl("Temperatuur", Variabele) ~ "°C",  # If "Variabele" contains "Temperatuur"
+      grepl("Helderheid", Variabele) ~ "lux",  # If "Variabele" contains "Helderheid"
+    TRUE ~ NA_character_  # Default case if neither condition matches
+  ),Label = case_when(
+      grepl("Temperatuur", Variabele) ~ "Temperatuur (°C)",  # If "Variabele" contains "Temperatuur"
+      grepl("Helderheid", Variabele) ~ "Helderheid (lux)",  # If "Variabele" contains "Helderheid"
+    TRUE ~ NA_character_  # Default case if neither condition matches
+  ))
+
+# Export 2
+combotabel2_RZ <- rbind(data2_log1, data2_log2, data2_log3, data2_log4, data2_log5, data2_log6, data2_log7, data2_log8)
+colnames(combotabel2_RZ) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
+combo2_long_RZ <- combotabel2_RZ %>% pivot_longer(cols = c("Temperatuur", "Helderheid"),names_to = "Variabele", values_to = "Meetwaarde")
+
+## add label
+combo2_long_RZ <- combo2_long_RZ %>%
+  mutate(
+    Eenheid = case_when(
+      grepl("Temperatuur", Variabele) ~ "°C",  # If "Variabele" contains "Temperatuur"
+      grepl("Helderheid", Variabele) ~ "lux",  # If "Variabele" contains "Helderheid"
+    TRUE ~ NA_character_  # Default case if neither condition matches
+  ),Label = case_when(
+      grepl("Temperatuur", Variabele) ~ "Temperatuur (°C)",  # If "Variabele" contains "Temperatuur"
+      grepl("Helderheid", Variabele) ~ "Helderheid (lux)",  # If "Variabele" contains "Helderheid"
+    TRUE ~ NA_character_  # Default case if neither condition matches
+  ))
+
+```
+
+## Zonnepanelen (logger 12 - 20)
+```{r}
+# Export 1
+combotabel_ZP <- rbind(data_log12, data_log13, data_log14, data_log15, data_log16, data_log17, data_log18, data_log19, data_log20)
+colnames(combotabel_ZP) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
+combo_long_ZP <- combotabel_ZP %>% pivot_longer(cols = c("Temperatuur", "Helderheid"),names_to = "Variabele", values_to = "Meetwaarde")
+
+## add label
+combo_long_ZP <- combo_long_ZP %>%
+  mutate(
+    Eenheid = case_when(
+      grepl("Temperatuur", Variabele) ~ "°C",  # If "Variabele" contains "Temperatuur"
+      grepl("Helderheid", Variabele) ~ "lux",  # If "Variabele" contains "Helderheid"
+    TRUE ~ NA_character_  # Default case if neither condition matches
+  ),Label = case_when(
+      grepl("Temperatuur", Variabele) ~ "Temperatuur (°C)",  # If "Variabele" contains "Temperatuur"
+      grepl("Helderheid", Variabele) ~ "Helderheid (lux)",  # If "Variabele" contains "Helderheid"
+    TRUE ~ NA_character_  # Default case if neither condition matches
+  ))
+
+# Export 2
+combotabel2_ZP <- rbind(data2_log12, data2_log13, data2_log14, data2_log15, data2_log16, data2_log17, data2_log18, data2_log19, data2_log20)
+colnames(combotabel2_ZP) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
+combo2_long_ZP <- combotabel2_ZP %>% pivot_longer(cols = c("Temperatuur", "Helderheid"),names_to = "Variabele", values_to = "Meetwaarde")
+
+## add label
+combo2_long_ZP <- combo2_long_ZP %>%
+  mutate(
+    Eenheid = case_when(
+      grepl("Temperatuur", Variabele) ~ "°C",  # If "Variabele" contains "Temperatuur"
+      grepl("Helderheid", Variabele) ~ "lux",  # If "Variabele" contains "Helderheid"
+    TRUE ~ NA_character_  # Default case if neither condition matches
+  ),Label = case_when(
+      grepl("Temperatuur", Variabele) ~ "Temperatuur (°C)",  # If "Variabele" contains "Temperatuur"
+      grepl("Helderheid", Variabele) ~ "Helderheid (lux)",  # If "Variabele" contains "Helderheid"
+    TRUE ~ NA_character_  # Default case if neither condition matches
+  ))
+
+# Export 3
+combotabel3_ZP <- rbind(data3_log12, data3_log13, data3_log14, data3_log15, data3_log16, data3_log17, data3_log18, data3_log19, data3_log20)
+colnames(combotabel3_ZP) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
+combo3_long_ZP <- combotabel3_ZP %>% pivot_longer(cols = c("Temperatuur", "Helderheid"),names_to = "Variabele", values_to = "Meetwaarde")
+
+## add label
+combo3_long_ZP <- combo3_long_ZP %>%
   mutate(
     Eenheid = case_when(
       grepl("Temperatuur", Variabele) ~ "°C",  # If "Variabele" contains "Temperatuur"
@@ -313,6 +391,7 @@ combo_long_RZ %>% filter(Logger %in% reeks_randzone & Variabele == "Helderheid")
   ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
   geom_line() +
   scale_y_log10()
+
 
 ```
 
