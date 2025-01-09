@@ -11,10 +11,16 @@ library(scales)
 library(tidyr)
 library(dplyr)
 library(ggpubr)
+library(plotly)
 ```
 
-# lees data in
 ```{r}
+knitr::opts_chunk$set(fig.width=13, fig.height=8) 
+```
+
+
+# lees data in
+```{r echo = FALSE}
 # RANDZONE 
 ## Export 1 (31/10/2024 - 22/01/2024)
 data_log1 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 1 2024-01-22 13_57_49 CET (Data CET).xlsx")
@@ -169,7 +175,7 @@ reeks_zonnepanelen <- c("12", "13", "14", "15", "16", "17", "18", "19", "20")
 
 # data samenvoegen en naar wide format
 ## Randzone (logger 1 - 8)
-```{r}
+```{r echo = FALSE}
 # Export 1
 combotabel_RZ <- rbind(data_log1, data_log2, data_log3, data_log4, data_log5, data_log6, data_log7, data_log8)
 colnames(combotabel_RZ) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
@@ -209,7 +215,7 @@ combo2_long_RZ <- combo2_long_RZ %>%
 ```
 
 ## Zonnepanelen (logger 12 - 20)
-```{r}
+```{r echo = FALSE}
 # Export 1
 combotabel_ZP <- rbind(data_log12, data_log13, data_log14, data_log15, data_log16, data_log17, data_log18, data_log19, data_log20)
 colnames(combotabel_ZP) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
@@ -266,121 +272,147 @@ combo3_long_ZP <- combo3_long_ZP %>%
 ```
 
 
-# plot
-```{r}
-# check outliers
-ggplot(data_log1,
-       aes(x = Datum_Tijdstip, y = `°C`)) +
-  geom_boxplot()
-
-# metingen van  logger 1
-ggplot(data_log1,
-       aes(x = Datum_Tijdstip, y = `°C`)) +
-  geom_line(colour = "red") +
-  geom_line(data = data_log1, aes(x = Datum_Tijdstip, y = lux)) +
-  labs(title = "Temperatuurverloop + helderheid Logger 1 Nieuwkapelleplas") +
-  ylab("Meetwaarde (log10)") +
-  xlab("Datum staalname") +
-  scale_y_log10() + 
-  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
-
-```
-
 # Randzone logger 1 - 8 
+## Reeks 1
 ```{r}
 # temperatuur (°C)
-ggplot(data_log1,
-       aes(x = Datum_Tijdstip, y = `°C`)) +
-  geom_line(colour = "red") +
-  geom_line(data = data_log2, aes(x = Datum_Tijdstip, y = `°C`), colour = "orange") +
-  geom_line(data = data_log3, aes(x = Datum_Tijdstip, y = `°C`), colour = "yellow") +
-  geom_line(data = data_log4, aes(x = Datum_Tijdstip, y = `°C`), colour = "lightgreen") +
-  geom_line(data = data_log5, aes(x = Datum_Tijdstip, y = `°C`), colour = "green") +
-  geom_line(data = data_log6, aes(x = Datum_Tijdstip, y = `°C`), colour = "darkgreen") +
-  geom_line(data = data_log7, aes(x = Datum_Tijdstip, y = `°C`), colour = "lightblue") +
-  geom_line(data = data_log8, aes(x = Datum_Tijdstip, y = `°C`), colour = "blue") +
-  labs(title = "Temperatuurverloop Loggers randzone (1-8) Nieuwkapelleplas") +
-  ylab("Temperatuur (°C)") +
-  xlab("Datum staalname") +
-  scale_y_continuous(breaks = seq(0,17,1)) +
-  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+ggplotly(combo_long_RZ %>%
+  filter(Variabele == "Temperatuur") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y")) +
+  scale_y_continuous(breaks = seq(0,14,1), limits = c(0,14)) +
+  labs(title = "Temperatuur loggers randzone (1-8)") +
+  ylab("Temperatuur (°C)"))
 
 # helderheid (lux)
 ## geen transformatie lux
-ggplot(data_log1,
-       aes(x = Datum_Tijdstip, y = lux)) +
-  geom_line(colour = "red") +
-  geom_line(data = data_log2, aes(x = Datum_Tijdstip, y = lux), colour = "orange") +
-  geom_line(data = data_log3, aes(x = Datum_Tijdstip, y = lux), colour = "yellow") +
-  geom_line(data = data_log4, aes(x = Datum_Tijdstip, y = lux), colour = "lightgreen") +
-  geom_line(data = data_log5, aes(x = Datum_Tijdstip, y = lux), colour = "green") +
-  geom_line(data = data_log6, aes(x = Datum_Tijdstip, y = lux), colour = "darkgreen") +
-  geom_line(data = data_log7, aes(x = Datum_Tijdstip, y = lux), colour = "lightblue") +
-  geom_line(data = data_log8, aes(x = Datum_Tijdstip, y = lux), colour = "blue") +
-  labs(title = "Lichtintensiteit Loggers randzone (1-8) Nieuwkapelleplas") +
-  ylab("Helderheid (lux)") +
-  xlab("Datum staalname") +
-  ylim(0,8000) +
-  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+ggplotly(combo_long_RZ %>%
+  filter(Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y")) +
+  scale_y_continuous(breaks = seq(0,7000,1000), limits = c(0,7000)) +
+  labs(title = "Lichtsterkte loggers randzone (1-8)") +
+  ylab("Lichtsterkte (lux)"))
 
 ## logaritmische transformatie lux
-ggplot(data_log1,
-       aes(x = Datum_Tijdstip, y = lux)) +
-  geom_line(colour = "red") +
-  geom_line(data = data_log2, aes(x = Datum_Tijdstip, y = lux), colour = "orange") +
-  geom_line(data = data_log3, aes(x = Datum_Tijdstip, y = lux), colour = "yellow") +
-  geom_line(data = data_log4, aes(x = Datum_Tijdstip, y = lux), colour = "lightgreen") +
-  geom_line(data = data_log5, aes(x = Datum_Tijdstip, y = lux), colour = "green") +
-  geom_line(data = data_log6, aes(x = Datum_Tijdstip, y = lux), colour = "darkgreen") +
-  geom_line(data = data_log7, aes(x = Datum_Tijdstip, y = lux), colour = "lightblue") +
-  geom_line(data = data_log8, aes(x = Datum_Tijdstip, y = lux), colour = "blue") +
-  labs(title = "Lichtintensiteit Loggers randzone (1-8) Nieuwkapelleplas") +
-  ylab("Helderheid (lux)") +
-  xlab("Datum staalname") +
-  ylim(0,8000) +
+ggplotly(combo_long_RZ %>%
+  filter(Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
   scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y")) +
-  scale_y_log10()
+  scale_y_log10() +
+  labs(title = "Lichtsterkte loggers randzone (1-8)") +
+  ylab("Lichtsterkte (log10(lux))"))
+```
+
+## Reeks 2
+```{r}
+# temperatuur (°C)
+ggplotly(combo2_long_RZ %>%
+  filter(Variabele == "Temperatuur") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) +
+  scale_y_continuous(breaks = seq(0,16,1), limits = c(0,16)) +
+  labs(title = "Temperatuur loggers randzone (1-8)") +
+  ylab("Temperatuur (°C)"))
+
+# helderheid (lux)
+## geen transformatie lux
+ggplotly(combo2_long_RZ %>%
+  filter(Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) +
+  scale_y_continuous(breaks = seq(0,10000,1000), limits = c(0,10000)) +
+  labs(title = "Lichtsterkte loggers randzone (1-8)") +
+  ylab("Lichtsterkte (lux)"))
+
+## logaritmische transformatie lux
+ggplotly(combo2_long_RZ %>%
+  filter(Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) +
+  scale_y_log10() +
+  labs(title = "Lichtsterkte loggers randzone (1-8)") +
+  ylab("Lichtsterkte (log10(lux))"))
 ```
 
 
 # Zonnepanelen logger 12 - 20
+
+## Reeks 1
 ```{r}
 # temperatuur (°C)
-ggplot(data_log12,
-       aes(x = Datum_Tijdstip, y = `°C`)) +
-  geom_line(colour = "red") +
-  geom_line(data = data_log13, aes(x = Datum_Tijdstip, y = `°C`), colour = "orange") +
-  geom_line(data = data_log14, aes(x = Datum_Tijdstip, y = `°C`), colour = "yellow") +
-  geom_line(data = data_log15, aes(x = Datum_Tijdstip, y = `°C`), colour = "lightgreen") +
-  geom_line(data = data_log16, aes(x = Datum_Tijdstip, y = `°C`), colour = "green") +
-  geom_line(data = data_log17, aes(x = Datum_Tijdstip, y = `°C`), colour = "darkgreen") +
-  geom_line(data = data_log18, aes(x = Datum_Tijdstip, y = `°C`), colour = "lightblue") +
-  geom_line(data = data_log19, aes(x = Datum_Tijdstip, y = `°C`), colour = "blue") +
-  geom_line(data = data_log20, aes(x = Datum_Tijdstip, y = `°C`), colour = "darkblue") +
-  labs(title = "Temperatuurverloop Loggers zonnepaneelzone (12-20) Nieuwkapelleplas") +
-  ylab("Temperatuur (°C)") +
-  xlab("Datum staalname") +
-  scale_y_continuous(breaks = seq(0,17,1)) +
-  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+ggplotly(combo_long_ZP %>%
+  filter(Variabele == "Temperatuur") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y")) +
+  scale_y_continuous(breaks = seq(0,14,1), limits = c(0,14)) +
+  labs(title = "Temperatuur loggers zonnepaneelzone (12-20)") +
+  ylab("Temperatuur (°C)"))
 
 # licht-intensiteit (lux)
-ggplot(data_log12,
-       aes(x = Datum_Tijdstip, y = lux)) +
-  geom_line(colour = "red") +
-  geom_line(data = data_log13, aes(x = Datum_Tijdstip, y = lux), colour = "orange") +
-  geom_line(data = data_log14, aes(x = Datum_Tijdstip, y = lux), colour = "yellow") +
-  geom_line(data = data_log15, aes(x = Datum_Tijdstip, y = lux), colour = "lightgreen") +
-  geom_line(data = data_log16, aes(x = Datum_Tijdstip, y = lux), colour = "green") +
-  geom_line(data = data_log17, aes(x = Datum_Tijdstip, y = lux), colour = "darkgreen") +
-  geom_line(data = data_log18, aes(x = Datum_Tijdstip, y = lux), colour = "lightblue") +
-  geom_line(data = data_log19, aes(x = Datum_Tijdstip, y = lux), colour = "blue") +
-  geom_line(data = data_log20, aes(x = Datum_Tijdstip, y = lux), colour = "darkblue") +
-  labs(title = "Lichtintensiteit Loggers zonnepaneelzone (12-20) Nieuwkapelleplas") +
-  ylab("Temperatuur (°C)") +
-  xlab("Datum staalname") +
-  scale_y_log10() +
-  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
+ggplotly(combo_long_ZP %>%
+  filter(Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y")) +
+  scale_y_continuous(breaks = seq(0,6000,1000), limits = c(0,6000)) +
+  labs(title = "Lichtsterkte loggers zonnepaneelzone (12-20)") +
+  ylab("Lichtsterkte (lux)"))
 ```
+
+## Reeks 2
+```{r}
+# temperatuur (°C)
+ggplotly(combo2_long_ZP %>%
+  filter(Variabele == "Temperatuur") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) +
+  scale_y_continuous(breaks = seq(0, 16, 1), limits = c(0, 16)) +
+  labs(title = "Temperatuur loggers zonnepaneelzone (12-20)") +
+  ylab("Temperatuur (°C)"))
+
+# licht-intensiteit (lux)
+ggplotly(combo2_long_ZP %>%
+  filter(Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) + 
+  scale_y_continuous(breaks = seq(0,6000, 1000), limits = c(0, 6000)) +
+  labs(title = "Lichtsterkte loggers zonnepaneelzone (12-20)") +
+  ylab("Lichtsterkte (lux)"))
+```
+
+## Reeks 3
+```{r}
+# temperatuur (°C)
+ggplotly(combo3_long_ZP %>%
+  filter(Variabele == "Temperatuur") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) +
+  scale_y_continuous(breaks = seq(-8, 28, 2), limits = c(-8, 28)) +
+  labs(title = "Temperatuur loggers zonnepaneelzone (12-20)") +
+  ylab("Temperatuur (°C)"))
+
+# licht-intensiteit (lux)
+ggplotly(combo3_long_ZP %>%
+  filter(Variabele == "Helderheid") %>%
+  ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
+  geom_line() +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) +
+  scale_y_continuous(breaks = seq(0, 7000, 1000), limits = c(0, 7000)) +
+  labs(title = "Lichtsterkte loggers zonnepaneelzone (12-20)") +
+  ylab("Lichtsterkte (lux)"))
+```
+
 
 # met gecombineerde tabel
 ```{r}
@@ -423,7 +455,7 @@ temp_RZ <- combo_long_RZ %>% filter(Variabele == "Temperatuur") %>%
   ylab("Temperatuur (°C)") +
   scale_x_datetime(breaks = date_breaks("1 week"), labels = date_format("%d-%m-%Y"))
 
-ggarrange(temp_RZ, temp_ZP, ncol = 2, legend = FALSE)
+#ggarrange(temp_RZ, temp_ZP, ncol = 2, legend = FALSE)
 
 ### licht-intensiteit
 ggplot() +
@@ -460,4 +492,5 @@ combo2_long_ZP %>% filter(Variabele == "Helderheid") %>%
   scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b-%Y"))
 
 ```
+
 
