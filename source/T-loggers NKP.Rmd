@@ -24,14 +24,14 @@ knitr::opts_chunk$set(fig.width=13, fig.height=8)
 ```{r echo = FALSE}
 # RANDZONE 
 ## Export 1 (31/10/2024 - 22/01/2024)
-data_log1 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 1 2024-01-22 13_57_49 CET (Data CET).xlsx")
-data_log2 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 2 2024-01-22 14_00_31 CET (Data CET).xlsx")
-data_log3 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 3 2024-01-22 14_02_32 CET (Data CET).xlsx")
-data_log4 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 4 2024-01-22 14_04_25 CET (Data CET).xlsx")
-data_log5 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 5 2024-01-22 14_06_23 CET (Data CET).xlsx")
-data_log6 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 6 2024-01-22 14_07_49 CET (Data CET).xlsx")
-data_log7 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 7 2024-01-22 14_12_04 CET (Data CET).xlsx")
-data_log8 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 8 2024-01-22 14_14_09 CET (Data CET).xlsx")
+data_log1 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 1 2024-01-22 13_57_49 CET (Data CET).xlsx")
+data_log2 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 2 2024-01-22 14_00_31 CET (Data CET).xlsx")
+data_log3 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 3 2024-01-22 14_02_32 CET (Data CET).xlsx")
+data_log4 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 4 2024-01-22 14_04_25 CET (Data CET).xlsx")
+data_log5 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 5 2024-01-22 14_06_23 CET (Data CET).xlsx")
+data_log6 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 6 2024-01-22 14_07_49 CET (Data CET).xlsx")
+data_log7 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 7 2024-01-22 14_12_04 CET (Data CET).xlsx")
+data_log8 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 8 2024-01-22 14_14_09 CET (Data CET).xlsx")
 
 colnames(data_log1) <- c("#", "Datum_Tijdstip", "°C", "lux")
 data_log1$label <- "01"
@@ -51,14 +51,14 @@ colnames(data_log8) <- c("#", "Datum_Tijdstip", "°C", "lux")
 data_log8$label <- "08"
 
 ## Export 2 (31/10/2023 - 22/04/2024)
-data2_log1 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 1 2024-04-22 12_01_57 CEST (Data CEST).xlsx")
-data2_log2 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 2 2024-04-22 12_03_39 CEST (Data CEST).xlsx")
-data2_log3 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 3 2024-04-22 12_04_31 CEST (Data CEST).xlsx")
-data2_log4 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 4 2024-04-22 12_05_14 CEST (Data CEST).xlsx")
-data2_log5 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 5 2024-04-22 12_05_56 CEST (Data CEST).xlsx")
-data2_log6 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 6 2024-04-22 12_06_45 CEST (Data CEST).xlsx")
-data2_log7 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 7 2024-04-22 12_07_32 CEST (Data CEST).xlsx")
-data2_log8 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 8 2024-04-22 12_08_19 CEST (Data CEST).xlsx")
+data2_log1 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 1 2024-04-22 12_01_57 CEST (Data CEST).xlsx")
+data2_log2 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 2 2024-04-22 12_03_39 CEST (Data CEST).xlsx")
+data2_log3 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 3 2024-04-22 12_04_31 CEST (Data CEST).xlsx")
+data2_log4 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 4 2024-04-22 12_05_14 CEST (Data CEST).xlsx")
+data2_log5 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 5 2024-04-22 12_05_56 CEST (Data CEST).xlsx")
+data2_log6 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 6 2024-04-22 12_06_45 CEST (Data CEST).xlsx")
+data2_log7 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 7 2024-04-22 12_07_32 CEST (Data CEST).xlsx")
+data2_log8 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 8 2024-04-22 12_08_19 CEST (Data CEST).xlsx")
 
 colnames(data2_log1) <- c("#", "Datum_Tijdstip", "°C", "lux")
 data2_log1$label <- "01"
@@ -80,15 +80,15 @@ data2_log8$label <- "08"
 # ZONNEPANELEN
 
 ## Export 1 (31/10/2023 - 22/01/2024)
-data_log12 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 12 2024-01-22 15_55_07 CET (Data CET).xlsx")
-data_log13 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 13 2024-01-22 15_56_24 CET (Data CET).xlsx")
-data_log14 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 14 2024-01-22 15_57_27 CET (Data CET).xlsx")
-data_log15 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 15 2024-01-22 15_59_20 CET (Data CET).xlsx")
-data_log16 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 16 2024-01-22 16_01_12 CET (Data CET).xlsx")
-data_log17 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 17 2024-01-22 16_02_04 CET (Data CET).xlsx")
-data_log18 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 18 2024-01-22 16_03_20 CET (Data CET).xlsx")
-data_log19 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 19 2024-01-22 16_05_14 CET (Data CET).xlsx")
-data_log20 <- read_xlsx("./data/Hobo datalog export 1/NKP LOG 20 2024-01-22 16_06_04 CET (Data CET).xlsx")
+data_log12 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 12 2024-01-22 15_55_07 CET (Data CET).xlsx")
+data_log13 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 13 2024-01-22 15_56_24 CET (Data CET).xlsx")
+data_log14 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 14 2024-01-22 15_57_27 CET (Data CET).xlsx")
+data_log15 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 15 2024-01-22 15_59_20 CET (Data CET).xlsx")
+data_log16 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 16 2024-01-22 16_01_12 CET (Data CET).xlsx")
+data_log17 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 17 2024-01-22 16_02_04 CET (Data CET).xlsx")
+data_log18 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 18 2024-01-22 16_03_20 CET (Data CET).xlsx")
+data_log19 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 19 2024-01-22 16_05_14 CET (Data CET).xlsx")
+data_log20 <- read_xlsx("../data/Hobo datalog export 1/NKP LOG 20 2024-01-22 16_06_04 CET (Data CET).xlsx")
 
 colnames(data_log12) <- c("#", "Datum_Tijdstip", "°C", "lux")
 data_log12$label <- "12"
@@ -110,15 +110,15 @@ colnames(data_log20) <- c("#", "Datum_Tijdstip", "°C", "lux")
 data_log20$label <- "20"
 
 ## Export 2 (31/10/2023 - 22/04/2024)
-data2_log12 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 12 2024-04-22 12_12_11 CEST (Data CEST).xlsx")
-data2_log13 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 13 2024-04-22 12_12_59 CEST (Data CEST).xlsx")
-data2_log14 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 14 2024-04-22 12_14_29 CEST (Data CEST).xlsx")
-data2_log15 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 15 2024-04-22 12_15_59 CEST (Data CEST).xlsx")
-data2_log16 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 16 2024-04-22 12_16_57 CEST (Data CEST).xlsx")
-data2_log17 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 17 2024-04-22 12_18_03 CEST (Data CEST).xlsx")
-data2_log18 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 18 2024-04-22 12_18_47 CEST (Data CEST).xlsx")
-data2_log19 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 19 2024-04-22 12_19_31 CEST (Data CEST).xlsx")
-data2_log20 <- read_xlsx("./data/Hobo datalog export 2/NKP LOG 20 2024-04-22 12_20_18 CEST (Data CEST).xlsx")
+data2_log12 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 12 2024-04-22 12_12_11 CEST (Data CEST).xlsx")
+data2_log13 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 13 2024-04-22 12_12_59 CEST (Data CEST).xlsx")
+data2_log14 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 14 2024-04-22 12_14_29 CEST (Data CEST).xlsx")
+data2_log15 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 15 2024-04-22 12_15_59 CEST (Data CEST).xlsx")
+data2_log16 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 16 2024-04-22 12_16_57 CEST (Data CEST).xlsx")
+data2_log17 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 17 2024-04-22 12_18_03 CEST (Data CEST).xlsx")
+data2_log18 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 18 2024-04-22 12_18_47 CEST (Data CEST).xlsx")
+data2_log19 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 19 2024-04-22 12_19_31 CEST (Data CEST).xlsx")
+data2_log20 <- read_xlsx("../data/Hobo datalog export 2/NKP LOG 20 2024-04-22 12_20_18 CEST (Data CEST).xlsx")
 
 colnames(data2_log12) <- c("#", "Datum_Tijdstip", "°C", "lux")
 data2_log12$label <- "12"
@@ -140,15 +140,15 @@ colnames(data2_log20) <- c("#", "Datum_Tijdstip", "°C", "lux")
 data2_log20$label <- "20"
 
 ## Export 3 (31/10/2023 - 22/08/2024)
-data3_log12 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 11 2024-11-20 09_54_11 CET (Data CET).xlsx")
-data3_log13 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 12 2024-11-20 09_48_50 CET (Data CET).xlsx")
-data3_log14 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 13 2024-11-20 09_49_51 CET (Data CET).xlsx")
-data3_log15 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 15 2024-11-20 09_41_13 CET (Data CET).xlsx")
-data3_log16 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 16 2024-11-20 10_15_57 CET (Data CET).xlsx")
-data3_log17 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 17 2024-11-20 10_24_12 CET (Data CET).xlsx")
-data3_log18 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 18 2024-11-20 10_20_43 CET (Data CET).xlsx")
-data3_log19 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 19 2024-11-20 10_05_57 CET (Data CET).xlsx")
-data3_log20 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 20 2024-11-20 10_11_11 CET (Data CET).xlsx")
+data3_log12 <- read_xlsx("../data/Hobo datalog export 3/NKP LOG 11 2024-11-20 09_54_11 CET (Data CET).xlsx")
+data3_log13 <- read_xlsx("../data/Hobo datalog export 3/NKP LOG 12 2024-11-20 09_48_50 CET (Data CET).xlsx")
+data3_log14 <- read_xlsx("../data/Hobo datalog export 3/NKP LOG 13 2024-11-20 09_49_51 CET (Data CET).xlsx")
+data3_log15 <- read_xlsx("../data/Hobo datalog export 3/NKP LOG 15 2024-11-20 09_41_13 CET (Data CET).xlsx")
+data3_log16 <- read_xlsx("../data/Hobo datalog export 3/NKP LOG 16 2024-11-20 10_15_57 CET (Data CET).xlsx")
+data3_log17 <- read_xlsx("../data/Hobo datalog export 3/NKP LOG 17 2024-11-20 10_24_12 CET (Data CET).xlsx")
+data3_log18 <- read_xlsx("../data/Hobo datalog export 3/NKP LOG 18 2024-11-20 10_20_43 CET (Data CET).xlsx")
+data3_log19 <- read_xlsx("../data/Hobo datalog export 3/NKP LOG 19 2024-11-20 10_05_57 CET (Data CET).xlsx")
+data3_log20 <- read_xlsx("../data/Hobo datalog export 3/NKP LOG 20 2024-11-20 10_11_11 CET (Data CET).xlsx")
 
 colnames(data3_log12) <- c("#", "Datum_Tijdstip", "°C", "lux")
 data3_log12$label <- "12"
@@ -271,6 +271,14 @@ combo3_long_ZP <- combo3_long_ZP %>%
   ))
 ```
 
+# Belangrijke data
+## 31/10/2023 - Plaatsing dataloggers: Randzone (loggers 1-8) en Zonnepaneelzone (12-20)
+## 04/12/2023 - Verhoogde waterstand; hoogte loggers aangepast
+## 22/12/2023 (22u) - logger 15 stopt met data verzamelen
+## 22/01/2024 - Verhoogde waterstand; logger gekuisd (algen) 
+## 19/03/2024 - Boeilijn 1 is verplaatst; waterniveau gezakt (20 cm)
+## 22/04/2024 - Loggers uitgelezen, logger 14 eind maart gestopt met data verzamelen; vervangen door oude logger 11
+## 19/11/2024 - Boeilijn zonnepaneelzone uit water gehaald, boeilijn randzone met nog 4 werkende loggers
 
 # Randzone logger 1 - 8 
 ## Reeks 1
