@@ -14,6 +14,7 @@ library(ggpubr)
 library(plotly)
 library(lubridate)
 library(tidyverse)
+library(viridis)
 ```
 
 ```{r echo = FALSE, results = 'hide'}
@@ -433,9 +434,8 @@ ggplotly(combo3_long_ZP %>%
   filter(Variabele == "Temperatuur") %>%
   ggplot(aes(x = Tijdstip, y = Meetwaarde, colour = Logger)) +
   geom_line() +
-  geom_line(data = combo_long_ZP %>% filter(Variabele == "Temperatuur" & Logger == "15"), aes(x = Tijdstip, y = Meetwaarde))  +
   scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) +
-  scale_y_continuous(breaks = seq(-8, 28, 2), limits = c(-8, 28)) +
+  scale_y_continuous(breaks = seq(0, 28, 2), limits = c(0, 28)) +
   labs(title = "Temperatuur loggers zonnepaneelzone (12-20)") +
   ylab("Temperatuur (°C)"))
 
@@ -454,9 +454,9 @@ ggplotly(combo3_long_ZP %>%
 
 # met gecombineerde tabel
 ```{r echo = FALSE}
-# data-reeks 1
+# REEKS 1
 
-### licht-intensiteit
+## licht-intensiteit
 ggplotly(ggplot() +
   geom_boxplot(data = combo_long_ZP %>% 
                  filter(Variabele == "Helderheid"), aes(x = Logger, y = Meetwaarde, colour = Logger)) + 
@@ -465,7 +465,7 @@ ggplotly(ggplot() +
   ylab("Licht-intensiteit (lux)") +
   scale_y_log10())
 
-#### Maand november
+### Maand november
 ggplotly(ggplot() +
   geom_boxplot(data = combo_long_ZP %>% 
                  filter(Variabele == "Helderheid" & month(Tijdstip) %in% 11), aes(x = Logger, y = Meetwaarde, colour = Logger)) + 
@@ -475,7 +475,7 @@ ggplotly(ggplot() +
   labs(title = "Lichtintensiteit Randzone (1-8) vs. Zonnepaneelzone (12-20) November 2023")  +
   scale_y_log10())
 
-#### Maand december
+### Maand december
 ggplotly(ggplot() +
   geom_boxplot(data = combo_long_ZP %>% 
                  filter(Variabele == "Helderheid" & month(Tijdstip) %in% 12), aes(x = Logger, y = Meetwaarde, colour = Logger)) + 
@@ -484,20 +484,77 @@ ggplotly(ggplot() +
   ylab("Licht-intensiteit (lux)") +
   labs(title = "Lichtintensiteit Randzone (1-8) vs. Zonnepaneelzone (12-20) December 2023") +
   scale_y_log10())
+
+# REEKS 3
+
+## temperatuur
+
+ggplotly(ggplot() +
+  geom_boxplot(data = combo3_long_ZP %>% 
+                 filter(Variabele == "Temperatuur"), aes(x = Logger, y = Meetwaarde, colour = Logger)) +
+  ylab("Temperatuur") +
+  scale_y_continuous(breaks = seq(0,28,2)))
+
+# helderheid
+ggplotly(ggplot() +
+  geom_boxplot(data = combo3_long_ZP %>% 
+                 filter(Variabele == "Helderheid"), aes(x = Logger, y = Meetwaarde, colour = Logger)) +
+  ylab("Licht-intensiteit (lux)") +
+  scale_y_log10())
+
 ```
 
 
 # Thermische stratificatie
 ```{r}
-library(scales)
+est_temp_by_date <- function(target_date, target_depth) {
+  data_for_date <- combotabel3_ZP %>%
+    filter(date == target_date) %>%
+    arrange(depth)
+approx(data_for_date$depth, data_for_date$temp, xout = target_depth)$y
+}
+
+est_temp_by_date(, c(0,1,1.5,2))
+
 ggplot(combotabel3_ZP, aes(x = Tijdstip, y = Diepte, colour = Temperatuur)) +
   geom_point() +
-  scale_y_reverse(breaks = seq(0,9,0.5)) +
+  scale_y_reverse(breaks = seq(0,8,0.5)) +
   scale_colour_gradient2(
-    midpoint = 5,
+    midpoint = 10,
     high = muted("red"),
     low = muted("blue")
   )
+```
+
+```{r}
+afgeronde_data <- combotabel3_ZP[,c(2,3,6)] %>%
+  mutate(across(c(Temperatuur, Diepte), round, digits = 2))
+afgeronde_data$Tijdstip <- as.POSIXct(afgeronde_data$Tijdstip, format = "%Y-%m-%d %H:%M:%S")
+  
+ggplot(afgeronde_data, aes(Tijdstip, Diepte, fill = Temperatuur)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", midpoint = 15) +
+  labs(x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur") + scale_y_reverse() +
+  theme_minimal()
+
+# interpolatie met ontbrekende data
+library(zoo)
+complete_data <- afgeronde_data %>%
+  complete(Tijdstip, Diepte, fill = list(Temperatuur = NA))
+complete_data$Temperatuur <- na.approx(complete_data$Temperatuur,
+          x = complete_data$Tijdstip,
+          na.rm = FALSE)
+# plot opnieuw
+ggplot(complete_data, aes(Tijdstip, Diepte, fill = Temperatuur)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", midpoint = 15, na.value = "grey80") +
+  labs(x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur") + scale_y_reverse() +
+  theme_minimal()
+```
+
+```{r}
+library(fields)
+image.plot(afgeronde_data$Tijdstip, afgeronde_data$Diepte, afgeronde_data$Temperatuur)
 ```
 
 
