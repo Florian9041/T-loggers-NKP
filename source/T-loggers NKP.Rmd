@@ -508,17 +508,15 @@ ggplotly(ggplot() +
 # Stratificatie thermisch
 
 ```{r}
-
 # Temperatuur
 ggplotly(ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = Temperatuur)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", midpoint = 15) +
-  labs(x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur") +
+  labs(title = "Thermische stratificatie Nieuwkapelleplas", x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur") +
   theme_minimal() +
-  scale_y_discrete(limits = rev)) +
-  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%M-%Y"))
-
-
+  scale_y_discrete(limits = rev) +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y"))
+)
 
 # interpolatie met ontbrekende data
 #library(zoo)
@@ -543,9 +541,10 @@ ggplotly(ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = Temperat
 ggplotly(ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid))) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", midpoint = 1, na.value = "grey80") +
-  labs(x = "Tijdstip", y = "Diepte (m)", fill = "Helderheid") + scale_y_reverse(breaks = seq(0,8,0.5)) +
+  labs(title = "Temperatuursverdeling Nieuwkapelleplas", x = "Tijdstip", y = "Diepte (m)", fill = "Helderheid") + scale_y_reverse(breaks = seq(0,8,0.5)) +
   theme_minimal() +
-  scale_y_discrete(limits = rev)) +
-  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%M-%Y"))
+  scale_y_discrete(limits = rev) +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y"))
+)
 ```
 
