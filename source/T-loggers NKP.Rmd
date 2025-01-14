@@ -141,9 +141,10 @@ colnames(data2_log20) <- c("#", "Datum_Tijdstip", "°C", "lux")
 data2_log20$label <- "20"
 
 ## Export 3 (31/10/2023 - 22/08/2024)
-data3_log12 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 11 2024-11-20 09_54_11 CET (Data CET).xlsx")
-data3_log13 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 12 2024-11-20 09_48_50 CET (Data CET).xlsx")
-data3_log14 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 13 2024-11-20 09_49_51 CET (Data CET).xlsx")
+### let op logger 14 is vervangen door logger 11
+data3_log14 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 11 2024-11-20 09_54_11 CET (Data CET).xlsx")
+data3_log12 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 12 2024-11-20 09_48_50 CET (Data CET).xlsx")
+data3_log13 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 13 2024-11-20 09_49_51 CET (Data CET).xlsx")
 data3_log15 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 15 2024-11-20 09_41_13 CET (Data CET).xlsx")
 data3_log16 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 16 2024-11-20 10_15_57 CET (Data CET).xlsx")
 data3_log17 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 17 2024-11-20 10_24_12 CET (Data CET).xlsx")
@@ -180,7 +181,12 @@ reeks_zonnepanelen <- c("12", "13", "14", "15", "16", "17", "18", "19", "20")
 # Export 1
 combotabel_RZ <- rbind(data_log1, data_log2, data_log3, data_log4, data_log5, data_log6, data_log7, data_log8)
 colnames(combotabel_RZ) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
-combo_long_RZ <- combotabel_RZ %>% pivot_longer(cols = c("Temperatuur", "Helderheid"),names_to = "Variabele", values_to = "Meetwaarde")
+combotabel_RZ <- combotabel_RZ %>%
+  mutate(Diepte = case_when(
+    Logger == "01" ~ 0.5,
+    TRUE ~ as.numeric(Logger) - 1
+  ))
+combo_long_RZ <- combotabel_RZ %>% pivot_longer(cols = c("Temperatuur", "Helderheid", "Diepte"),names_to = "Variabele", values_to = "Meetwaarde")
 
 ## add label
 combo_long_RZ <- combo_long_RZ %>%
@@ -198,7 +204,12 @@ combo_long_RZ <- combo_long_RZ %>%
 # Export 2
 combotabel2_RZ <- rbind(data2_log1, data2_log2, data2_log3, data2_log4, data2_log5, data2_log6, data2_log7, data2_log8)
 colnames(combotabel2_RZ) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
-combo2_long_RZ <- combotabel2_RZ %>% pivot_longer(cols = c("Temperatuur", "Helderheid"),names_to = "Variabele", values_to = "Meetwaarde")
+combotabel2_RZ <- combotabel2_RZ %>%
+  mutate(Diepte = case_when(
+    Logger == "01" ~ 0.5,
+    TRUE ~ as.numeric(Logger) - 1
+  ))
+combo2_long_RZ <- combotabel2_RZ %>% pivot_longer(cols = c("Temperatuur", "Helderheid", "Diepte"),names_to = "Variabele", values_to = "Meetwaarde")
 
 ## add label
 combo2_long_RZ <- combo2_long_RZ %>%
@@ -220,9 +231,13 @@ combo2_long_RZ <- combo2_long_RZ %>%
 # Export 1
 combotabel_ZP <- rbind(data_log12, data_log13, data_log14, data_log15, data_log16, data_log17, data_log18, data_log19, data_log20)
 colnames(combotabel_ZP) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
-combo_long_ZP <- combotabel_ZP %>% pivot_longer(cols = c("Temperatuur", "Helderheid"),names_to = "Variabele", values_to = "Meetwaarde")
 combotabel_ZP <- combotabel_ZP %>%
-  mutate(Diepte = as.numeric(Logger) - 11)
+  mutate(Diepte = case_when(
+    Logger == "12" ~ 0.5,
+    TRUE ~ as.numeric(Logger) - 12
+  ))
+combo_long_ZP <- combotabel_ZP %>% pivot_longer(cols = c("Temperatuur", "Helderheid", "Diepte"),names_to = "Variabele", values_to = "Meetwaarde")
+
 
 ## add label
 combo_long_ZP <- combo_long_ZP %>%
@@ -240,7 +255,12 @@ combo_long_ZP <- combo_long_ZP %>%
 # Export 2
 combotabel2_ZP <- rbind(data2_log12, data2_log13, data2_log14, data2_log15, data2_log16, data2_log17, data2_log18, data2_log19, data2_log20)
 colnames(combotabel2_ZP) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
-combo2_long_ZP <- combotabel2_ZP %>% pivot_longer(cols = c("Temperatuur", "Helderheid"),names_to = "Variabele", values_to = "Meetwaarde")
+combotabel2_ZP <- combotabel2_ZP %>%
+  mutate(Diepte = case_when(
+    Logger == "12" ~ 0.5,
+    TRUE ~ as.numeric(Logger) - 12
+  ))
+combo2_long_ZP <- combotabel2_ZP %>% pivot_longer(cols = c("Temperatuur", "Helderheid", "Diepte"),names_to = "Variabele", values_to = "Meetwaarde")
 
 ## add label
 combo2_long_ZP <- combo2_long_ZP %>%
@@ -258,9 +278,12 @@ combo2_long_ZP <- combo2_long_ZP %>%
 # Export 3
 combotabel3_ZP <- rbind(data3_log12, data3_log13, data3_log14, data3_log15, data3_log16, data3_log17, data3_log18, data3_log19, data3_log20)
 colnames(combotabel3_ZP) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Logger")
-combo3_long_ZP <- combotabel3_ZP %>% pivot_longer(cols = c("Temperatuur", "Helderheid"),names_to = "Variabele", values_to = "Meetwaarde")
 combotabel3_ZP <- combotabel3_ZP %>%
-  mutate(Diepte = as.numeric(Logger) - 11)
+  mutate(Diepte = case_when(
+    Logger == "12" ~ 0.5,
+    TRUE ~ as.numeric(Logger) - 12
+  ))
+combo3_long_ZP <- combotabel3_ZP %>% pivot_longer(cols = c("Temperatuur", "Helderheid", "Diepte"),names_to = "Variabele", values_to = "Meetwaarde")
 
 ## add label
 combo3_long_ZP <- combo3_long_ZP %>%
@@ -469,7 +492,7 @@ ggplotly(ggplot() +
 library(scales)
 ggplot(combotabel3_ZP, aes(x = Tijdstip, y = Diepte, colour = Temperatuur)) +
   geom_point() +
-  scale_y_reverse(breaks = seq(0,9,1)) +
+  scale_y_reverse(breaks = seq(0,9,0.5)) +
   scale_colour_gradient2(
     midpoint = 5,
     high = muted("red"),
