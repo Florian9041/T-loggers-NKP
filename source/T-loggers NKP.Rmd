@@ -505,61 +505,45 @@ ggplotly(ggplot() +
 ```
 
 
-# Thermische stratificatie
-```{r}
-est_temp_by_date <- function(target_date, target_depth) {
-  data_for_date <- combotabel3_ZP %>%
-    filter(date == target_date) %>%
-    arrange(depth)
-approx(data_for_date$depth, data_for_date$temp, xout = target_depth)$y
-}
-
-est_temp_by_date(, c(0,1,1.5,2))
-
-ggplot(combotabel3_ZP, aes(x = Tijdstip, y = Diepte, colour = Temperatuur)) +
-  geom_point() +
-  scale_y_reverse(breaks = seq(0,8,0.5)) +
-  scale_colour_gradient2(
-    midpoint = 10,
-    high = muted("red"),
-    low = muted("blue")
-  )
-```
+# Stratificatie thermisch
 
 ```{r}
-afgeronde_data <- combotabel3_ZP[,c(2,3,6)] %>%
-  mutate(across(c(Temperatuur, Diepte), round, digits = 2))
-afgeronde_data$Tijdstip <- as.POSIXct(afgeronde_data$Tijdstip, format = "%Y-%m-%d %H:%M:%S")
-  
-ggplot(afgeronde_data, aes(Tijdstip, Diepte, fill = Temperatuur)) +
+
+# Temperatuur
+ggplotly(ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = Temperatuur)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", midpoint = 15) +
-  labs(x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur") + scale_y_reverse() +
-  theme_minimal()
+  labs(x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur") +
+  theme_minimal() +
+  scale_y_discrete(limits = rev))
+
+
 
 # interpolatie met ontbrekende data
-library(zoo)
-complete_data <- afgeronde_data %>%
-  complete(Tijdstip, Diepte, fill = list(Temperatuur = NA))
-complete_data$Temperatuur <- na.approx(complete_data$Temperatuur,
-          x = complete_data$Tijdstip,
-          na.rm = FALSE)
+#library(zoo)
+#complete_data <- afgeronde_data %>%
+#  complete(Tijdstip, Diepte, fill = list(Temperatuur = NA))
+#complete_data$Temperatuur <- na.approx(complete_data$Temperatuur,
+#          x = complete_data$Tijdstip,
+#          na.rm = FALSE)
 # plot opnieuw
-ggplot(complete_data, aes(Tijdstip, Diepte, fill = Temperatuur)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", midpoint = 15, na.value = "grey80") +
-  labs(x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur") + scale_y_reverse() +
-  theme_minimal()
+#ggplotly(ggplot(complete_data, aes(Tijdstip, Diepte, fill = Temperatuur)) +
+#  geom_tile() +
+#  scale_fill_gradient2(low = "blue", high = "red", midpoint = 15, na.value = "grey80") +
+#  labs(x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur") + scale_y_reverse() +
+#  theme_minimal())
 ```
 
-```{r}
-library(fields)
-image.plot(afgeronde_data$Tijdstip, afgeronde_data$Diepte, afgeronde_data$Temperatuur)
-```
 
 
 # Stratificatie lichtintensiteit
 ```{r}
-
+# Helderheid
+ggplotly(ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid))) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", midpoint = 1, na.value = "grey80") +
+  labs(x = "Tijdstip", y = "Diepte (m)", fill = "Helderheid") + scale_y_reverse(breaks = seq(0,8,0.5)) +
+  theme_minimal() +
+  scale_y_discrete(limits = rev))
 ```
 
