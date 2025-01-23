@@ -14,7 +14,6 @@ library(ggpubr)
 library(plotly)
 library(lubridate)
 library(tidyverse)
-library(viridis)
 ```
 
 ```{r echo = FALSE, results = 'hide'}
@@ -152,6 +151,10 @@ data3_log17 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 17 2024-11-20 10_
 data3_log18 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 18 2024-11-20 10_20_43 CET (Data CET).xlsx")
 data3_log19 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 19 2024-11-20 10_05_57 CET (Data CET).xlsx")
 data3_log20 <- read_xlsx("./data/Hobo datalog export 3/NKP LOG 20 2024-11-20 10_11_11 CET (Data CET).xlsx")
+
+# logger 14 en 15 missen metingen van temp en helderheid voor enkele maanden, NA's verwijderen voor plot
+data3_log14 <- na.omit(data3_log14)
+data3_log15 <- na.omit(data3_log15)
 
 colnames(data3_log12) <- c("#", "Datum_Tijdstip", "°C", "lux")
 data3_log12$label <- "12"
@@ -509,28 +512,24 @@ ggplotly(ggplot() +
 
 ```{r}
 # Temperatuur
+<<<<<<< HEAD
 ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = Temperatuur)) +
   geom_tile() +
   scale_fill_gradient2(low = "darkblue", high = "red", midpoint = 14, breaks = c(0,5,10,15,20,25), labels = c(0,5,10,15,20,25), limits = c(0,28)) +
   labs(title = "Thermische stratificatie Nieuwkapelleplas", x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur (°C)") +
   theme_classic2() +
   scale_y_discrete(limits = rev) +
+=======
+ggplotly(ggplot(combotabel3_ZP, aes(x = Tijdstip, y = as.factor(Diepte), fill = Temperatuur)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", midpoint = 15) +
+  labs(title = "Thermische stratificatie Zonnepaneelzone Nieuwkapelleplas", x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur") +
+  theme_minimal() +
+  scale_y_discrete(limits = rev)  +
+>>>>>>> 090277715e5b90c240470244c1b56a82d36c68ca
   scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y"))
 
 
-# interpolatie met ontbrekende data
-#library(zoo)
-#complete_data <- afgeronde_data %>%
-#  complete(Tijdstip, Diepte, fill = list(Temperatuur = NA))
-#complete_data$Temperatuur <- na.approx(complete_data$Temperatuur,
-#          x = complete_data$Tijdstip,
-#          na.rm = FALSE)
-# plot opnieuw
-#ggplotly(ggplot(complete_data, aes(Tijdstip, Diepte, fill = Temperatuur)) +
-#  geom_tile() +
-#  scale_fill_gradient2(low = "blue", high = "red", midpoint = 15, na.value = "grey80") +
-#  labs(x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur") + scale_y_reverse() +
-#  theme_minimal())
 ```
 
 
@@ -540,9 +539,15 @@ ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = Temperatuur)) +
 # Helderheid
 ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid))) +
   geom_tile() +
+<<<<<<< HEAD
   scale_fill_gradient2(low = "black", high = "red", midpoint = 1, na.value = "black") +
   labs(title = "Temperatuursverdeling Nieuwkapelleplas", x = "Tijdstip", y = "Diepte (m)", fill = "Helderheid (log10 lux)") + scale_y_reverse(breaks = seq(0,8,0.5)) +
   theme_classic2() +
+=======
+  scale_fill_gradient2(low = "blue", high = "red", midpoint = 1, na.value = "grey80") +
+  labs(title = "Temperatuursverdeling Zonnepaneelzone Nieuwkapelleplas", x = "Tijdstip", y = "Diepte (m)", fill = "Helderheid") + scale_y_reverse(breaks = seq(0,8,0.5)) +
+  theme_minimal() +
+>>>>>>> 090277715e5b90c240470244c1b56a82d36c68ca
   scale_y_discrete(limits = rev) +
   scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y"))
 ```
