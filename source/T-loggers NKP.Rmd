@@ -528,11 +528,14 @@ ggplotly(ggplot() +
 ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = Temperatuur)) +
   geom_tile() +
   scale_fill_gradient2(low = "darkblue", high = "red", midpoint = 14, breaks = c(0,5,10,15,20,25), labels = c(0,5,10,15,20,25), limits = c(0,28)) +
-  labs(title = "Thermische stratificatie Nieuwkapelleplas", x = "Tijdstip", y = "Diepte (m)", fill = "Temperatuur (°C)") +
+  labs(fill = "Temperatuur (°C)") +
   theme_classic2() +
   scale_y_discrete(limits = rev)  +
-scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y"))
-
+scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) +
+  theme(
+    plot.title = element_blank(),  # Remove the main title
+    axis.title = element_blank(),
+    axis.text = element_text(size = 12)) # Remove axis titles
 
 ```
 
@@ -554,94 +557,48 @@ ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid)
   geom_point(data = combotabel3_ZP_filtered_high, aes(Tijdstip, as.factor(Diepte)), color = "green4", size = 2)  # Add points for Helderheid > 1000
 ```
 
+## Lichtintensiteit per week voor > 1000 en > 500 lux
 ```{r}
-# grootste diepte per week
-# Filter for Helderheid > 1000
-combotabel3_ZP_filtered_high <- combotabel3_ZP[combotabel3_ZP$Helderheid > 1000, ]
-
-# Convert 'Tijdstip' to Date or POSIXct format (if not already)
-combotabel3_ZP_filtered_high$Tijdstip <- as.POSIXct(combotabel3_ZP_filtered_high$Tijdstip)
-
-# Add a new column for the week of the year
-combotabel3_ZP_filtered_high <- combotabel3_ZP_filtered_high %>%
+# Make sure the week and year are available
+combotabel3_ZP <- combotabel3_ZP %>%
   mutate(week = week(Tijdstip), year = year(Tijdstip))
 
-# Select the highest Diepte per week
-combotabel3_ZP_max_depth_per_week <- combotabel3_ZP_filtered_high %>%
+# Filter for Helderheid > 1000
+combotabel3_ZP_max_depth_per_week_1000 <- combotabel3_ZP %>%
+  filter(Helderheid > 1000) %>%
   group_by(year, week) %>%
   filter(Diepte == max(Diepte)) %>%
-  ungroup()  # Ungroup after filtering
+  ungroup() %>%
+  mutate(lux_condition = "lux > 1000")  # Label for condition
 
-combotabel3_ZP_max_depth_per_week <- combotabel3_ZP_max_depth_per_week %>%
-  mutate(lux_1000 = ifelse(Helderheid > 1000, "lux > 1000", "lux <= 1000"))
-
-
-# Plot
-ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid))) +
-  geom_tile() +
-  scale_fill_gradient2(low = "black", high = "red", midpoint = 1, na.value = "black") +
-  labs(title = "Temperatuursverdeling Nieuwkapelleplas", x = "Tijdstip", y = "Diepte (m)", fill = "Helderheid (log10 lux)") +
-  scale_y_reverse(breaks = seq(0, 8, 0.5)) +
-  theme_linedraw() +
-  scale_y_discrete(limits = rev) +
-  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) +
-  geom_point(data = combotabel3_ZP_max_depth_per_week, aes(Tijdstip, as.factor(Diepte), colour = lux_1000), size = 2) +
-  scale_color_manual(values = c("lux > 1000" = "green4", "lux <= 1000" = "transparent")) +  # Set color for legend
-  guides(color = guide_legend(title = "Plantengroei"))  # Customize legend title
-
-```
-
-```{r}
-# per dag
-# Filter for Helderheid > 1000
-combotabel3_ZP_filtered_high <- combotabel3_ZP[combotabel3_ZP$Helderheid > 1000, ]
-
-# Convert 'Tijdstip' to POSIXct format (if not already)
-combotabel3_ZP_filtered_high$Tijdstip <- as.POSIXct(combotabel3_ZP_filtered_high$Tijdstip)
-
-# Add a new column for the date part of 'Tijdstip'
-combotabel3_ZP_filtered_high <- combotabel3_ZP_filtered_high %>%
-  mutate(date = as.Date(Tijdstip))
-
-# Select the highest Diepte per day
-combotabel3_ZP_max_depth_per_day <- combotabel3_ZP_filtered_high %>%
-  group_by(date) %>%
+# Filter for Helderheid > 500
+combotabel3_ZP_max_depth_per_week_500 <- combotabel3_ZP %>%
+  filter(Helderheid > 500) %>%
+  group_by(year, week) %>%
   filter(Diepte == max(Diepte)) %>%
-  ungroup()  # Ungroup after filtering
+  ungroup() %>%
+  mutate(lux_condition = "lux > 500")  # Label for condition
 
-# Add a column to indicate whether Helderheid is greater than 1000 (for legend)
-combotabel3_ZP_max_depth_per_day <- combotabel3_ZP_max_depth_per_day %>%
-  mutate(lux_1000 = ifelse(Helderheid > 1000, "lux > 1000", "lux <= 1000"))
+# Combine the two datasets
+combotabel3_ZP_max_depth_per_week_combined <- bind_rows(combotabel3_ZP_max_depth_per_week_1000, combotabel3_ZP_max_depth_per_week_500)
 
 # Plot
 ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid))) +
   geom_tile() +
   scale_fill_gradient2(low = "black", high = "red", midpoint = 1, na.value = "black") +
-  labs(title = "Temperatuursverdeling Nieuwkapelleplas", x = "Tijdstip", y = "Diepte (m)", fill = "Helderheid (log10 lux)") +
+  labs(fill = "Helderheid (log10 lux)") +
   scale_y_reverse(breaks = seq(0, 8, 0.5)) +
   theme_linedraw() +
   scale_y_discrete(limits = rev) +
   scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) +
-  geom_point(data = combotabel3_ZP_max_depth_per_day, aes(Tijdstip, as.factor(Diepte), color = lux_1000), size = 2) +  # Add points for max Diepte per day
-  scale_color_manual(values = c("lux > 1000" = "green4", "lux <= 1000" = "transparent")) +  # Set color for legend
-  guides(color = guide_legend(title = "Plantengroei"))  # Customize legend title
+  # Points for lux > 1000 (with color green) and lux > 500 (with color blue)
+  geom_point(data = combotabel3_ZP_max_depth_per_week_combined, aes(Tijdstip, as.factor(Diepte), colour = lux_condition), size = 3) +
+  scale_color_manual(values = c("lux > 1000" = "green4", "lux > 500" = "blue")) +  # Color for both conditions
+  guides(color = guide_legend(title = "Helderheid")) +
+  theme(
+    plot.title = element_blank(),  # Remove the main title
+    axis.title = element_blank(),  # Remove axis titles
+    axis.text = element_text(size = 10)  # Optional: Adjust axis text size
+  )
 
 ```
-
-# LakeEnsembleR
-```{r}
-# Alleen data zonnepaneelzone nodig
-#install.packages("remotes")
-remotes::install_github("GLEON/rLakeAnalyzer")
-remotes::install_github("aemon-j/GLM3r", ref = "v3.1.1")
-remotes::install_github("USGS-R/glmtools", ref = "ggplot_overhaul")
-remotes::install_github("aemon-j/FLakeR", ref = "inflow")
-remotes::install_github("aemon-j/GOTMr")
-remotes::install_github("aemon-j/gotmtools")
-remotes::install_github("aemon-j/SimstratR")
-remotes::install_github("aemon-j/MyLakeR")
-
-# install.packages("remotes")
-devtools::install_github("aemon-j/LakeEnsemblR")
-```
-
