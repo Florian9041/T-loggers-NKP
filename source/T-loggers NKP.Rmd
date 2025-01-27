@@ -542,21 +542,6 @@ scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y"))
 
 
 # Stratificatie lichtintensiteit
-```{r}
-# Lux hoger dan 15000
-combotabel3_ZP_filtered_high <- combotabel3_ZP[combotabel3_ZP$Helderheid > 1000, ]
-
-# Helderheid
-ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid))) +
-  geom_tile() +
-  scale_fill_gradient2(low = "black", high = "red", midpoint = 1, na.value = "black") +
-  labs(title = "Temperatuursverdeling Nieuwkapelleplas", x = "Tijdstip", y = "Diepte (m)", fill = "Helderheid (log10 lux)") + scale_y_reverse(breaks = seq(0,8,0.5)) +
-  theme_linedraw() +
-  scale_y_discrete(limits = rev) +
-  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%b %Y")) +
-  geom_point(data = combotabel3_ZP_filtered_high, aes(Tijdstip, as.factor(Diepte)), color = "green4", size = 2)  # Add points for Helderheid > 1000
-```
-
 ## Lichtintensiteit per week voor > 1000 en > 500 lux
 ```{r}
 # Make sure the week and year are available
@@ -598,7 +583,7 @@ ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid)
   theme(
     plot.title = element_blank(),  # Remove the main title
     axis.title = element_blank(),  # Remove axis titles
-    axis.text = element_text(size = 10)  # Optional: Adjust axis text size
+    axis.text = element_text(size = 12)  # Optional: Adjust axis text size
   )
 
 ```
