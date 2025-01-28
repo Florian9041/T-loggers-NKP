@@ -535,7 +535,10 @@ scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%m/%y"))
   theme(
     plot.title = element_blank(),  # Remove the main title
     axis.title = element_blank(),
-    axis.text = element_text(size = 14)) # Remove axis titles
+    axis.text = element_text(size = 14),
+    legend.title = element_text(size = 16),
+    legend.text = element_text(size = 13))
+    
 
 ```
 
@@ -554,7 +557,7 @@ combotabel3_ZP_max_depth_per_week_1000 <- combotabel3_ZP %>%
   group_by(year, week) %>%
   filter(Diepte == max(Diepte)) %>%
   ungroup() %>%
-  mutate(lux_condition = "lux > 1000")  # Label for condition
+  mutate(lux_condition = "lux = 1000")  # Label for condition
 
 # Filter for Helderheid > 500
 combotabel3_ZP_max_depth_per_week_500 <- combotabel3_ZP %>%
@@ -562,10 +565,44 @@ combotabel3_ZP_max_depth_per_week_500 <- combotabel3_ZP %>%
   group_by(year, week) %>%
   filter(Diepte == max(Diepte)) %>%
   ungroup() %>%
-  mutate(lux_condition = "lux > 500")  # Label for condition
+  mutate(lux_condition = "lux = 500")  # Label for condition
 
 # Combine the two datasets
 combotabel3_ZP_max_depth_per_week_combined <- bind_rows(combotabel3_ZP_max_depth_per_week_1000, combotabel3_ZP_max_depth_per_week_500)
+
+# Plot
+ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid))) +
+  geom_tile() +
+  scale_fill_gradient2(
+    low = "black", high = "red", midpoint = 1, na.value = "black",
+    breaks = c(0, 1, 2, 3),  # Define the breaks where you want the labels
+    labels = c("1", "10", "100", "1000")  # Customize the legend labels
+  ) +
+  labs(fill = "Helderheid (lux)") +
+  scale_y_reverse(breaks = seq(0, 8, 0.5)) +
+  theme_linedraw() +
+  scale_y_discrete(limits = rev) +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%m/%y")) +
+  # Points for lux > 1000 (with color green) and lux > 500 (with color blue)
+  geom_point(data = combotabel3_ZP_max_depth_per_week_combined, 
+             aes(Tijdstip, as.factor(Diepte), colour = lux_condition), size = 3) +
+  scale_color_manual(values = c("lux = 1000" = "green4", "lux = 500" = "blue")) +  # Color for both conditions
+  guides(color = guide_legend(title = "Limieten")) +
+  theme(
+    plot.title = element_blank(),  # Remove the main title
+    axis.title = element_blank(),  # Remove axis titles
+    axis.text = element_text(size = 14),
+    legend.title = element_text(size = 13),
+    legend.text = element_text(size = 13)
+  )
+
+```
+
+# zonder limieten van lux
+```{r}
+# Make sure the week and year are available
+combotabel3_ZP <- combotabel3_ZP %>%
+  mutate(week = week(Tijdstip), year = year(Tijdstip))
 
 # Plot
 ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid))) +
@@ -576,10 +613,6 @@ ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid)
   theme_linedraw() +
   scale_y_discrete(limits = rev) +
   scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%m/%y")) +
-  # Points for lux > 1000 (with color green) and lux > 500 (with color blue)
-  geom_point(data = combotabel3_ZP_max_depth_per_week_combined, aes(Tijdstip, as.factor(Diepte), colour = lux_condition), size = 3) +
-  scale_color_manual(values = c("lux > 1000" = "green4", "lux > 500" = "blue")) +  # Color for both conditions
-  guides(color = guide_legend(title = "Helderheid")) +
   theme(
     plot.title = element_blank(),  # Remove the main title
     axis.title = element_blank(),  # Remove axis titles
@@ -589,3 +622,31 @@ ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid)
   )
 
 ```
+
+```{r}
+combotabel3_ZP <- combotabel3_ZP %>%
+  mutate(week = week(Tijdstip), year = year(Tijdstip))
+
+# Plot
+ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = log10(Helderheid))) +
+  geom_tile() +
+  scale_fill_gradient2(
+    low = "black", high = "red", midpoint = 1, na.value = "black",
+    breaks = c(0, 1, 2, 3),  # Define the breaks where you want the labels
+    labels = c("1", "10", "100", "1000")  # Customize the legend labels
+  ) +
+  labs(fill = "Helderheid (lux)") +
+  scale_y_reverse(breaks = seq(0, 8, 0.5)) +
+  theme_linedraw() +
+  scale_y_discrete(limits = rev) +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%m/%y")) +
+  theme(
+    plot.title = element_blank(),  # Remove the main title
+    axis.title = element_blank(),  # Remove axis titles
+    axis.text = element_text(size = 14),
+    legend.title = element_text(size = 13),
+    legend.text = element_text(size = 13)
+  )
+
+```
+
