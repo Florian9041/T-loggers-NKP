@@ -285,16 +285,6 @@ colnames(combotabel3_ZP) <- c("#", "Tijdstip", "Temperatuur", "Helderheid", "Log
 # Make sure 'Tijdstip' is in POSIXct format (if not already)
 combotabel3_ZP$Tijdstip <- as.POSIXct(combotabel3_ZP$Tijdstip)
 
-# Specify the date to remove (2024-04-22)
-date_to_remove1 <- as.Date("2024-04-22")
-date_to_remove2 <- as.Date("2023-10-31")
-
-# Filter out all data for 2024-04-22 (all hours)
-combotabel3_ZP <- combotabel3_ZP %>%
-  filter(as.Date(Tijdstip) != date_to_remove1)
-combotabel3_ZP <- combotabel3_ZP %>%
-  filter(as.Date(Tijdstip) != date_to_remove2)
-
 combotabel3_ZP <- combotabel3_ZP %>%
   mutate(Diepte = case_when(
     Logger == "12" ~ 0.5,
@@ -314,6 +304,10 @@ combo3_long_ZP <- combo3_long_ZP %>%
       grepl("Helderheid", Variabele) ~ "Helderheid (lux)",  # If "Variabele" contains "Helderheid"
     TRUE ~ NA_character_  # Default case if neither condition matches
   ))
+
+# verwijder data waarin loggers boven water worden gehaald
+combotabel3_ZP <- combotabel3_ZP %>%
+  filter(!(as.Date(Tijdstip) %in% as.Date(c("2023-12-04", "2024-01-22", "2024-04-22", "2023-10-23"))))
 ```
 
 # Belangrijke data
@@ -525,23 +519,43 @@ ggplotly(ggplot() +
 
 ```{r}
 # Temperatuur
+library(grid)
+
 ggplot(combotabel3_ZP, aes(Tijdstip, as.factor(Diepte), fill = Temperatuur)) +
   geom_tile() +
   scale_fill_gradient2(low = "darkblue", high = "red", midpoint = 14, breaks = c(0,5,10,15,20,25), labels = c(0,5,10,15,20,25), limits = c(0,28)) +
   labs(fill = "Temperatuur (°C)") +
   theme_classic2() +
   scale_y_discrete(limits = rev)  +
-scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%m/%y")) +
+  scale_x_datetime(breaks = date_breaks("1 month"), labels = date_format("%m/%y")) +
   theme(
-    plot.title = element_blank(),  # Remove the main title
+    plot.title = element_blank(),
     axis.title = element_blank(),
     axis.text = element_text(size = 14),
     legend.title = element_text(size = 16),
-    legend.text = element_text(size = 13))
-    
+    legend.text = element_text(size = 13)
+  )
 
 ```
 
+```{r}
+# Define the range of date-time you want to complete (from min to max Tijdstip)
+start_time <- min(combotabel3_ZP$Tijdstip)
+end_time <- max(combotabel3_ZP$Tijdstip)
+
+# Create a complete sequence of date-time values (hourly in this case)
+complete_times <- seq(from = start_time, to = end_time, by = "hour")  # Change "hour" to "minute" if needed
+
+# Create a data frame with the complete date-time sequence
+complete_times_df <- data.frame(Tijdstip = complete_times)
+
+# Merge the original dataset with the complete date-time sequence
+combotabel3_ZP_complete <- merge(complete_times_df, combotabel3_ZP, by = "Tijdstip", all.x = TRUE)
+
+# Check the result
+head(combotabel3_ZP_complete)
+
+```
 
 
 # Stratificatie lichtintensiteit
